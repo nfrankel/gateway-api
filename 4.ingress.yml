@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  namespace: apigtw
+spec:
+  ingressClassName: apisix
+  rules:
+    - http:
+        paths:
+          - path: /left
+            pathType: Prefix
+            backend:
+              service:
+                name: left
+                port:
+                  number: 80
+          - path: /right
+            pathType: Prefix
+            backend:
+              service:
+                name: right
+                port:
+                  number: 80

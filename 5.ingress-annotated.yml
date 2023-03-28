@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  namespace: apigtw
+  annotations:
+    k8s.apisix.apache.org/rewrite-target-regex: /(left|right)/(.*)
+    k8s.apisix.apache.org/rewrite-target-regex-template: /$2
+spec:
+  ingressClassName: apisix
+  rules:
+    - http:
+        paths:
+          - path: /left
+            pathType: Prefix
+            backend:
+              service:
+                name: left
+                port:
+                  number: 80
+          - path: /right
+            pathType: Prefix
+            backend:
+              service:
+                name: right
+                port:
+                  number: 80

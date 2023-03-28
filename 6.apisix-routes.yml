@@ -1,0 +1,47 @@
+apiVersion: apisix.apache.org/v2
+kind: ApisixRoute
+metadata:
+  name: routes
+  namespace: apigtw
+spec:
+  http:
+    - name: left
+      match:
+        paths:
+          - /*
+        exprs:
+          - subject:
+              scope: Query
+              name: side
+            op: Equal
+            value: left
+      plugins:
+        - name: proxy-rewrite
+          enable: true
+          config:
+            regex_uri:
+              - /(.*)
+              - /rewritten/$1
+      backends:
+        - serviceName: left
+          servicePort: 80
+    - name: right
+      match:
+        paths:
+          - /*
+        exprs:
+          - subject:
+              scope: Query
+              name: side
+            op: Equal
+            value: right
+      plugins:
+        - name: proxy-rewrite
+          enable: true
+          config:
+            regex_uri:
+              - /(.*)
+              - /rewritten/$1
+      backends:
+        - serviceName: right
+          servicePort: 80
